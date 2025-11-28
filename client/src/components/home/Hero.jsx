@@ -35,8 +35,8 @@ const Hero = () => {
           <li><a className="hover:text-indigo-500 md:hover:underline underline-offset-8 transition" href="#">Home</a></li>
           <li><a className="hover:text-indigo-500 md:hover:underline underline-offset-8 transition" href="#features">Features</a></li>
           <li><a className="hover:text-indigo-500 md:hover:underline underline-offset-8 transition" href="#testimonial">Testimonials</a></li>
-          <li><a className="hover:text-indigo-500 md:hover:underline underline-offset-8 transition" href="#">About</a></li>
-          <li><a className="hover:text-indigo-500 md:hover:underline underline-offset-8 transition" href="#">Contact</a></li>
+          <li><a className="hover:text-indigo-500 md:hover:underline underline-offset-8 transition" href="#About">About</a></li>
+          <li><a className="hover:text-indigo-500 md:hover:underline underline-offset-8 transition" href="#Issue">Contact</a></li>
 
           {/* Login button for mobile */}
           <li className="block md:hidden mt-4">

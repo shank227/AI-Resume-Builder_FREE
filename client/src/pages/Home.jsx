@@ -7,6 +7,7 @@ import Testimonial from '../components/home/Testimonial'
 import CallToAction from '../components/home/CallToAction'
 import Footer from '../components/home/Footer'
 import About from '../components/home/About'
+import Issue from '../components/home/Issue'
 
 const Home = () => {
   return (
@@ -17,6 +18,7 @@ const Home = () => {
       <Title />
       <Testimonial />
       <About />
+      <Issue />
       <CallToAction />
       <Footer />
     </div>
