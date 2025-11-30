@@ -1,32 +1,68 @@
-// ...existing code...
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from "react";
+import styles from "./Form.module.css";
+import { FaGoogle, FaFacebook, FaGithub, FaLinkedin } from "react-icons/fa";
 
 const Login = () => {
+  const [active, setActive] = useState(false);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-      <div className="bg-white text-gray-500 w-full max-w-md mx-4 md:p-6 p-4 text-left text-sm rounded-xl shadow-[0px_0px_10px_0px] shadow-black/10">
-        <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">Welcome back</h2>
+    <div className={`${styles.container} ${active ? styles.active : ""}`} id="container">
+
+      {/* SIGN UP */}
+      <div className={`${styles.formContainer} ${styles.signUp}`}>
         <form>
-          <input id="email" className="w-full bg-transparent border my-3 border-gray-500/30 outline-none rounded-full py-2.5 px-4" type="email" placeholder="Enter your email" required />
-          <input id="password" className="w-full bg-transparent border mt-1 border-gray-500/30 outline-none rounded-full py-2.5 px-4" type="password" placeholder="Enter your password" required />
-          <div className="text-right py-4">
-            <a className="text-blue-600 underline" href="#">Forgot Password</a>
+          <h1>Create Account</h1>
+          <div className={styles.socialIcons}>
+            <a className={styles.icons}><FaGoogle className="text-red-500 text-xl"/></a>
+            <a className={styles.icons}><FaFacebook className="text-blue-600 text-xl" /></a>
+            <a className={styles.icons}><FaGithub className="text-gray-800 text-xl"/></a>
+            <a className={styles.icons}><FaLinkedin className="text-blue-700 text-xl"/></a>
           </div>
-          <button type="submit" className="w-full mb-3 bg-indigo-500 py-2.5 rounded-full text-white">Log in</button>
+          <span>Register with email</span>
+          <input type="text" placeholder="Name" />
+          <input type="email" placeholder="Enter Email" />
+          <input type="password" placeholder="Enter Password" />
+          <button type="button">Sign Up</button>
         </form>
-        <p className="text-center mt-4">Don't have an account? <Link to="/SignUp" className="text-indigo-600 underline">Sign Up</Link></p>
-        <button type="button" className="w-full flex items-center gap-2 justify-center mt-5 bg-black py-2.5 rounded-full text-white">
-          <img className="h-4 w-4" src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/login/appleLogo.png" alt="appleLogo" />
-          Log in with Apple
-        </button>
-        <button type="button" className="w-full flex items-center gap-2 justify-center my-3 bg-white border border-gray-500/30 py-2.5 rounded-full text-gray-800">
-          <img className="h-4 w-4" src="https://raw.githubusercontent.com/prebuiltui/prebuiltui/main/assets/login/googleFavicon.png" alt="googleFavicon" />
-          Log in with Google
-        </button>
       </div>
+
+      {/* SIGN IN */}
+      <div className={`${styles.formContainer} ${styles.signIn}`}>
+        <form>
+          <h1>Sign In</h1>
+          <div className={styles.socialIcons}>
+            <a className={styles.icons}><FaGoogle className="text-red-500 text-xl"/></a>
+            <a className={styles.icons}><FaFacebook className="text-blue-600 text-xl" /></a>
+            <a className={styles.icons}><FaGithub className="text-gray-800 text-xl"/></a>
+            <a className={styles.icons}><FaLinkedin className="text-blue-700 text-xl"/></a>
+          </div>
+          <span>Login with Email & Password</span>
+          <input type="email" placeholder="Enter Email" />
+          <input type="password" placeholder="Enter Password" />
+          <a href="#">Forgot Password?</a>
+          <button>Sign In</button>
+        </form>
+      </div>
+
+      {/* TOGGLE PANEL */}
+      <div className={styles.toggleContainer}>
+        <div className={styles.toggle}>
+          <div className={`${styles.togglePanel} ${styles.toggleLeft}`}>
+            <h1>Welcome Back</h1>
+            <p>Sign in with your email & password</p>
+            <button className={styles.hidden} onClick={() => setActive(false)}>Sign In</button>
+          </div>
+
+          <div className={`${styles.togglePanel} ${styles.toggleRight}`}>
+            <h1>Hello Friend</h1>
+            <p>Register to start your journey</p>
+            <button className={styles.hidden} onClick={() => setActive(true)}>Sign Up</button>
+          </div>
+        </div>
+      </div>
+
     </div>
-  )
-}
-export default Login
-// ...existing code...
+  );
+};
+
+export default Login;

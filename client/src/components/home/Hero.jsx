@@ -76,7 +76,7 @@ const Hero = () => {
         <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold max-w-4xl text-gray-800">Land your Dream Job with AI-Powered CVs</h1>
         <p className="max-w-xl text-center mt-6 px-4">Create, edit, and download professional CVs with AI-Powered Assistance & Enhancements.</p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-6">
-          <button className="px-7 py-3 rounded bg-indigo-600 hover:bg-indigo-700 text-white font-medium">Get Started Now</button>
+          <button className="px-7 py-3 rounded bg-indigo-600 hover:bg-indigo-700 text-white font-medium"> <Link to="/login" className="group hidden md:flex items-center gap-2">Get Started Now </Link></button>
           <button className="group px-7 py-2.5 flex items-center gap-2 font-medium">
             <a href="#testimonial">What users say about us?</a>
             <svg className="group-hover:translate-x-1 transition pt-0.5" width="12" height="9" viewBox="0 0 12 9" fill="none" xmlns="http://www.w3.org/2000/svg">

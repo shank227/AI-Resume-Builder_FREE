@@ -29,8 +29,8 @@ const About = () => {
                     <p className="mt-2">A simple space where anyone can create a clean, professional CV without getting slapped by a surprise subscription screen. A space built out of frustration, stubbornness, curiosity, and a little bit of madness..</p>
                     <p className='mt-2'>I'm <b>Shashank</b>—a CS student who loves building things that actually help.
                     I built this project because I needed it.
-                    And if it helps someone else skip the pain I went through, that's already a win.</p>
-                    <p className='mt-3'>And who knows—if people find value in it, maybe this small project becomes something bigger.</p>
+                    And if it helps someone else skip the pain I went through, that's already a <b>win</b>.</p>
+                    <p className='mt-3'>And who knows—if people find value in it, maybe this <b>small project</b> becomes something <b>bigger</b>.</p>
                     <p className='mt-4'>👉 Wanna know more about me?Click below</p>
                     <p className=''></p>
                     <button className="flex items-center gap-2 mt-8 hover:-translate-y-0.5 transition bg-gradient-to-r from-indigo-600 to-[#8A7DFF] py-3 px-8 rounded-full text-white">
