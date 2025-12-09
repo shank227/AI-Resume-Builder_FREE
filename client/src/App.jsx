@@ -7,6 +7,8 @@ import ResumeBuilder from "./pages/ResumeBuilder";
 import Preview from "./pages/Preview";
 import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
+import "react-quill/dist/quill.snow.css";
+
 
 const App = () => {
   return (

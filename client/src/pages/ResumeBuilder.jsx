@@ -1,14 +1,19 @@
+// // client/src/pages/ResumeBuilder.jsx
 // import React, { useRef, useState } from "react";
+// import html2canvas from "html2canvas";
 // import ClassicTemplate from "../components/templates/ClassicTemplate.jsx";
 // import HarvardTemplate from "../components/templates/HarvardTemplate.jsx";
-// import { useReactToPrint } from "react-to-print";
+// import { useReactToPrint } from "react-to-print"; // <-- ADDED
 
 // const uid = () => Math.random().toString(36).slice(2, 9);
 
 // /* ---------- Resume Preview Wrapper ---------- */
-// const ResumePreview = React.forwardRef(({ data, accentColor }, ref) => {
+// const ResumePreview = ({ data, accentColor }) => {
 //   return (
-//     <div ref={ref} className="w-full bg-white">
+//     <div
+//       className="w-full bg-white"
+//       style={{ width: "100%", minHeight: "100%" }}
+//     >
 //       {data.template === "classic" ? (
 //         <ClassicTemplate data={data} accentColor={accentColor} />
 //       ) : (
@@ -16,7 +21,8 @@
 //       )}
 //     </div>
 //   );
-// });
+// };
+
 
 // /* ---------- Template Selector ---------- */
 // const TemplateSelector = ({ value, onChange }) => {
@@ -48,15 +54,44 @@
 //     MAIN PAGE
 // =========================================================== */
 // export default function ResumeBuilder() {
-//   const previewRef = useRef();
+//   const previewRef = useRef(null);
 
-//   /* ---------- PDF Export (react-to-print) ---------- */
-//   const handlePrint = useReactToPrint({
-//     content: () => previewRef.current,
-//     documentTitle: "Resume",
-//   });
+//   /* ---------- Export as Image ---------- */
+//   const exportAsImage = async () => {
+//     if (!previewRef.current) return;
 
-//   /* ---------- Resume Core State ---------- */
+//     const canvas = await html2canvas(previewRef.current, {
+//       scale: 2,
+//       useCORS: true,
+//       logging: false,
+//     });
+
+//     const dataURL = canvas.toDataURL("image/png");
+
+//     const link = document.createElement("a");
+//     link.href = dataURL;
+//     link.download = "resume.png";
+//     link.click();
+//   };
+
+//   /* ---------- Export as PDF (react-to-print) ---------- */
+// const exportAsPDF = useReactToPrint({
+//   contentRef: previewRef,
+//   documentTitle: "resume",
+//   pageStyle: `
+//     @page { 
+//       size: A4; 
+//       margin: 20mm; 
+//     }
+//     body { 
+//       -webkit-print-color-adjust: exact !important;
+//       print-color-adjust: exact !important;
+//     }
+//   `,
+// });
+
+
+//   /* ---------- Resume State ---------- */
 //   const [resume, setResume] = useState(() => ({
 //     _id: uid(),
 //     title: "My Resume",
@@ -107,15 +142,15 @@
 //     }));
 
 //   const fileRef = useRef(null);
-//   const setImage = (file) => setPI({ image: file || null });
+//   const setImage = (f) => setPI({ image: f || null });
 
 //   /* ===========================================================
 //       UI
 //   ============================================================ */
+
 //   return (
 //     <div className="min-h-screen bg-gray-50 py-8">
 //       <div className="max-w-7xl mx-auto px-4">
-
 //         {/* ================= Header ================= */}
 //         <div className="flex items-center justify-between mb-8">
 //           <h1 className="text-xl font-semibold">Resume Builder</h1>
@@ -126,9 +161,18 @@
 //               onChange={(t) => update("template", t)}
 //             />
 
+//             {/* EXPORT AS IMAGE */}
 //             <button
 //               className="px-4 py-2 bg-indigo-600 text-white rounded"
-//               onClick={handlePrint}
+//               onClick={exportAsImage}
+//             >
+//               Export Image
+//             </button>
+
+//             {/* EXPORT AS PDF */}
+//             <button
+//               className="px-4 py-2 bg-green-600 text-white rounded"
+//               onClick={exportAsPDF}
 //             >
 //               Export PDF
 //             </button>
@@ -136,10 +180,9 @@
 //         </div>
 
 //         <div className="grid lg:grid-cols-12 gap-6">
-//           {/* ================= Left - Editor ================= */}
+//           {/* ================= LEFT COLUMN ================= */}
 //           <div className="lg:col-span-5 space-y-6">
-
-//             {/* ================= PERSONAL INFO ================= */}
+//             {/* PERSONAL INFO */}
 //             <div className="bg-white p-5 rounded-lg border shadow-sm">
 //               <h3 className="font-semibold mb-3">Personal Info</h3>
 
@@ -153,7 +196,6 @@
 //               <input
 //                 className="w-full px-3 py-2 border rounded mb-2"
 //                 placeholder="Email"
-//                 type="email"
 //                 value={resume.personal_info.email}
 //                 onChange={(e) => setPI({ email: e.target.value })}
 //               />
@@ -165,6 +207,7 @@
 //                   value={resume.personal_info.phone}
 //                   onChange={(e) => setPI({ phone: e.target.value })}
 //                 />
+
 //                 <input
 //                   className="px-3 py-2 border rounded"
 //                   placeholder="Location"
@@ -173,8 +216,8 @@
 //                 />
 //               </div>
 
-//               {/* Image */}
-//               <p className="mt-3 mb-1 text-sm text-gray-600">Profile Photo</p>
+//               {/* IMAGE */}
+//               <p className="mt-3 text-sm text-gray-600">Profile Photo</p>
 //               <input
 //                 type="file"
 //                 ref={fileRef}
@@ -182,40 +225,42 @@
 //                 onChange={(e) => setImage(e.target.files[0])}
 //               />
 
-//               {/* Links */}
+//               {/* LINKS */}
 //               <input
 //                 className="mt-3 w-full px-3 py-2 border rounded"
 //                 placeholder="LinkedIn URL"
 //                 value={resume.personal_info.linkedin}
 //                 onChange={(e) => setPI({ linkedin: e.target.value })}
 //               />
+
 //               <input
 //                 className="mt-2 w-full px-3 py-2 border rounded"
 //                 placeholder="GitHub URL"
 //                 value={resume.personal_info.github}
 //                 onChange={(e) => setPI({ github: e.target.value })}
 //               />
+
 //               <input
 //                 className="mt-2 w-full px-3 py-2 border rounded"
-//                 placeholder="Portfolio Website"
+//                 placeholder="Portfolio URL"
 //                 value={resume.personal_info.website}
 //                 onChange={(e) => setPI({ website: e.target.value })}
 //               />
 //             </div>
 
-//             {/* ================= SUMMARY ================= */}
+//             {/* SUMMARY */}
 //             <div className="bg-white p-5 rounded-lg border shadow-sm">
 //               <h3 className="font-semibold mb-3">Professional Summary</h3>
 //               <textarea
 //                 rows={4}
 //                 className="w-full px-3 py-2 border rounded"
-//                 placeholder="Short professional summary..."
+//                 placeholder="Write a short summary..."
 //                 value={resume.summary}
 //                 onChange={(e) => update("summary", e.target.value)}
 //               />
 //             </div>
 
-//             {/* ================= EXPERIENCE ================= */}
+//             {/* EXPERIENCE */}
 //             <div className="bg-white p-5 rounded-lg border shadow-sm">
 //               <div className="flex justify-between">
 //                 <h3 className="font-semibold">Experience</h3>
@@ -238,10 +283,9 @@
 //               <div className="space-y-3 mt-3">
 //                 {resume.experience.map((exp) => (
 //                   <div key={exp._id} className="border p-3 rounded">
-
 //                     <input
 //                       className="w-full px-2 py-1 border rounded mb-2"
-//                       placeholder="Role / Position"
+//                       placeholder="Role"
 //                       value={exp.title}
 //                       onChange={(e) =>
 //                         updateItem("experience", exp._id, {
@@ -272,6 +316,7 @@
 //                           })
 //                         }
 //                       />
+
 //                       <input
 //                         className="px-2 py-1 border rounded"
 //                         placeholder="End"
@@ -285,8 +330,8 @@
 //                     </div>
 
 //                     <textarea
-//                       rows={2}
 //                       className="mt-2 w-full px-2 py-1 border rounded"
+//                       rows={2}
 //                       placeholder="Description"
 //                       value={exp.desc}
 //                       onChange={(e) =>
@@ -307,7 +352,7 @@
 //               </div>
 //             </div>
 
-//             {/* ================= EDUCATION ================= */}
+//             {/* EDUCATION */}
 //             <div className="bg-white p-5 rounded-lg border shadow-sm">
 //               <div className="flex justify-between">
 //                 <h3 className="font-semibold">Education</h3>
@@ -363,7 +408,6 @@
 //                           })
 //                         }
 //                       />
-
 //                       <input
 //                         className="px-2 py-1 border rounded"
 //                         placeholder="End"
@@ -399,7 +443,7 @@
 //               </div>
 //             </div>
 
-//             {/* ================= PROJECTS ================= */}
+//             {/* PROJECTS */}
 //             <div className="bg-white p-5 rounded-lg border shadow-sm">
 //               <div className="flex justify-between">
 //                 <h3 className="font-semibold">Projects</h3>
@@ -421,26 +465,21 @@
 //               <div className="space-y-3 mt-3">
 //                 {resume.projects.map((p) => (
 //                   <div key={p._id} className="border p-3 rounded">
-
 //                     <input
-//                       className="w-full px-2 py-1 border rounded mb-2"
+//                       className="mb-2 w-full px-2 py-1 border rounded"
 //                       placeholder="Project Title"
 //                       value={p.title}
 //                       onChange={(e) =>
-//                         updateItem("projects", p._id, {
-//                           title: e.target.value,
-//                         })
+//                         updateItem("projects", p._id, { title: e.target.value })
 //                       }
 //                     />
 
 //                     <input
-//                       className="w-full px-2 py-1 border rounded mb-2"
-//                       placeholder="Project Link (URL)"
+//                       className="mb-2 w-full px-2 py-1 border rounded"
+//                       placeholder="Project Link"
 //                       value={p.link}
 //                       onChange={(e) =>
-//                         updateItem("projects", p._id, {
-//                           link: e.target.value,
-//                         })
+//                         updateItem("projects", p._id, { link: e.target.value })
 //                       }
 //                     />
 
@@ -450,9 +489,7 @@
 //                       placeholder="Description"
 //                       value={p.desc}
 //                       onChange={(e) =>
-//                         updateItem("projects", p._id, {
-//                           desc: e.target.value,
-//                         })
+//                         updateItem("projects", p._id, { desc: e.target.value })
 //                       }
 //                     />
 
@@ -467,10 +504,11 @@
 //               </div>
 //             </div>
 
-//             {/* ================= CERTIFICATIONS ================= */}
+//             {/* CERTIFICATIONS */}
 //             <div className="bg-white p-5 rounded-lg border shadow-sm">
 //               <div className="flex justify-between">
 //                 <h3 className="font-semibold">Certifications</h3>
+
 //                 <button
 //                   className="text-indigo-600 text-sm"
 //                   onClick={() =>
@@ -490,7 +528,7 @@
 //                 {resume.certifications.map((c) => (
 //                   <div key={c._id} className="border p-3 rounded">
 //                     <input
-//                       className="w-full px-2 py-1 border rounded mb-2"
+//                       className="mb-2 w-full px-2 py-1 border rounded"
 //                       placeholder="Certification Title"
 //                       value={c.title}
 //                       onChange={(e) =>
@@ -501,7 +539,7 @@
 //                     />
 
 //                     <input
-//                       className="w-full px-2 py-1 border rounded mb-2"
+//                       className="mb-2 w-full px-2 py-1 border rounded"
 //                       placeholder="Issuer"
 //                       value={c.issuer}
 //                       onChange={(e) =>
@@ -546,7 +584,7 @@
 //               </div>
 //             </div>
 
-//             {/* ================= SKILLS ================= */}
+//             {/* SKILLS */}
 //             <div className="bg-white p-5 rounded-lg border shadow-sm">
 //               <h3 className="font-semibold mb-2">Skills</h3>
 //               <SkillEditor
@@ -556,11 +594,11 @@
 //             </div>
 //           </div>
 
-//           {/* ================= RIGHT - PREVIEW ================= */}
+//           {/* ================= RIGHT COLUMN — PREVIEW ================= */}
 //           <div className="lg:col-span-7">
 //             <div
-//               className="bg-white border rounded-xl shadow p-5"
 //               ref={previewRef}
+//               className="bg-white border rounded-xl shadow p-5"
 //             >
 //               <ResumePreview data={resume} accentColor="#3B82F6" />
 //             </div>
@@ -572,14 +610,14 @@
 // }
 
 // /* ===========================================================
-//     SKILLS COMPONENT
+//     SKILLS EDITOR
 // =========================================================== */
 // function SkillEditor({ skills, onChange }) {
 //   const [val, setVal] = useState("");
 
 //   const addSkill = () => {
 //     if (!val.trim()) return;
-//     onChange([...skills, val.trim()]);
+//     onChange([...skills, val]);
 //     setVal("");
 //   };
 
@@ -606,9 +644,7 @@
 //             {s}
 //             <button
 //               className="text-red-600"
-//               onClick={() =>
-//                 onChange(skills.filter((_, idx) => i !== idx))
-//               }
+//               onClick={() => onChange(skills.filter((_, idx) => idx !== i))}
 //             >
 //               ×
 //             </button>
@@ -620,19 +656,21 @@
 // }
 
 // client/src/pages/ResumeBuilder.jsx
-
 import React, { useRef, useState } from "react";
 import html2canvas from "html2canvas";
 import ClassicTemplate from "../components/templates/ClassicTemplate.jsx";
 import HarvardTemplate from "../components/templates/HarvardTemplate.jsx";
+import { useReactToPrint } from "react-to-print";
+
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css"; // ensure this is imported once in your app
 
 const uid = () => Math.random().toString(36).slice(2, 9);
 
 /* ---------- Resume Preview Wrapper ---------- */
-const ResumePreview = React.forwardRef(({ data, accentColor }, ref) => {
+const ResumePreview = ({ data, accentColor }) => {
   return (
     <div
-      ref={ref}
       className="w-full bg-white"
       style={{ width: "100%", minHeight: "100%" }}
     >
@@ -643,7 +681,7 @@ const ResumePreview = React.forwardRef(({ data, accentColor }, ref) => {
       )}
     </div>
   );
-});
+};
 
 /* ---------- Template Selector ---------- */
 const TemplateSelector = ({ value, onChange }) => {
@@ -677,12 +715,29 @@ const TemplateSelector = ({ value, onChange }) => {
 export default function ResumeBuilder() {
   const previewRef = useRef(null);
 
+  /* ---------- Quill toolbar/modules ---------- */
+  const quillModules = {
+    toolbar: [
+      ["bold", "italic", "underline"],
+      [{ list: "ordered" }, { list: "bullet" }],
+      ["link"],
+    ],
+  };
+  const quillFormats = [
+    "bold",
+    "italic",
+    "underline",
+    "list",
+    "bullet",
+    "link",
+  ];
+
   /* ---------- Export as Image ---------- */
   const exportAsImage = async () => {
     if (!previewRef.current) return;
 
     const canvas = await html2canvas(previewRef.current, {
-      scale: 2, // high resolution
+      scale: 2,
       useCORS: true,
       logging: false,
     });
@@ -694,6 +749,25 @@ export default function ResumeBuilder() {
     link.download = "resume.png";
     link.click();
   };
+
+  /* ---------- Export as PDF (react-to-print) ---------- */
+  const exportAsPDF = useReactToPrint({
+    contentRef: previewRef,
+    documentTitle: "resume",
+    pageStyle: `
+      @page { 
+        size: A4; 
+        margin: 20mm; 
+      }
+      body { 
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+      /* prevent the control toolbar from showing in print */
+      .ql-toolbar { display: none !important; }
+      .ql-container.ql-snow { box-shadow: none !important; }
+    `,
+  });
 
   /* ---------- Resume State ---------- */
   const [resume, setResume] = useState(() => ({
@@ -755,7 +829,6 @@ export default function ResumeBuilder() {
   return (
     <div className="min-h-screen bg-gray-50 py-8">
       <div className="max-w-7xl mx-auto px-4">
-
         {/* ================= Header ================= */}
         <div className="flex items-center justify-between mb-8">
           <h1 className="text-xl font-semibold">Resume Builder</h1>
@@ -773,14 +846,20 @@ export default function ResumeBuilder() {
             >
               Export Image
             </button>
+
+            {/* EXPORT AS PDF */}
+            <button
+              className="px-4 py-2 bg-green-600 text-white rounded"
+              onClick={exportAsPDF}
+            >
+              Export PDF
+            </button>
           </div>
         </div>
 
         <div className="grid lg:grid-cols-12 gap-6">
-
           {/* ================= LEFT COLUMN ================= */}
           <div className="lg:col-span-5 space-y-6">
-
             {/* PERSONAL INFO */}
             <div className="bg-white p-5 rounded-lg border shadow-sm">
               <h3 className="font-semibold mb-3">Personal Info</h3>
@@ -850,12 +929,13 @@ export default function ResumeBuilder() {
             {/* SUMMARY */}
             <div className="bg-white p-5 rounded-lg border shadow-sm">
               <h3 className="font-semibold mb-3">Professional Summary</h3>
-              <textarea
-                rows={4}
-                className="w-full px-3 py-2 border rounded"
-                placeholder="Write a short summary..."
+              <ReactQuill
+                theme="snow"
                 value={resume.summary}
-                onChange={(e) => update("summary", e.target.value)}
+                onChange={(v) => update("summary", v)}
+                modules={quillModules}
+                formats={quillFormats}
+                className="bg-white"
               />
             </div>
 
@@ -882,13 +962,14 @@ export default function ResumeBuilder() {
               <div className="space-y-3 mt-3">
                 {resume.experience.map((exp) => (
                   <div key={exp._id} className="border p-3 rounded">
-
                     <input
                       className="w-full px-2 py-1 border rounded mb-2"
                       placeholder="Role"
                       value={exp.title}
                       onChange={(e) =>
-                        updateItem("experience", exp._id, { title: e.target.value })
+                        updateItem("experience", exp._id, {
+                          title: e.target.value,
+                        })
                       }
                     />
 
@@ -897,7 +978,9 @@ export default function ResumeBuilder() {
                       placeholder="Company"
                       value={exp.company}
                       onChange={(e) =>
-                        updateItem("experience", exp._id, { company: e.target.value })
+                        updateItem("experience", exp._id, {
+                          company: e.target.value,
+                        })
                       }
                     />
 
@@ -918,19 +1001,22 @@ export default function ResumeBuilder() {
                         placeholder="End"
                         value={exp.end}
                         onChange={(e) =>
-                          updateItem("experience", exp._id, { end: e.target.value })
+                          updateItem("experience", exp._id, {
+                            end: e.target.value,
+                          })
                         }
                       />
                     </div>
 
-                    <textarea
-                      className="mt-2 w-full px-2 py-1 border rounded"
-                      rows={2}
-                      placeholder="Description"
+                    <ReactQuill
+                      theme="snow"
                       value={exp.desc}
-                      onChange={(e) =>
-                        updateItem("experience", exp._id, { desc: e.target.value })
+                      onChange={(v) =>
+                        updateItem("experience", exp._id, { desc: v })
                       }
+                      modules={quillModules}
+                      formats={quillFormats}
+                      className="bg-white mt-2"
                     />
 
                     <button
@@ -972,7 +1058,9 @@ export default function ResumeBuilder() {
                       placeholder="School"
                       value={ed.school}
                       onChange={(e) =>
-                        updateItem("education", ed._id, { school: e.target.value })
+                        updateItem("education", ed._id, {
+                          school: e.target.value,
+                        })
                       }
                     />
 
@@ -981,7 +1069,9 @@ export default function ResumeBuilder() {
                       placeholder="Degree"
                       value={ed.degree}
                       onChange={(e) =>
-                        updateItem("education", ed._id, { degree: e.target.value })
+                        updateItem("education", ed._id, {
+                          degree: e.target.value,
+                        })
                       }
                     />
 
@@ -991,7 +1081,9 @@ export default function ResumeBuilder() {
                         placeholder="Start"
                         value={ed.start}
                         onChange={(e) =>
-                          updateItem("education", ed._id, { start: e.target.value })
+                          updateItem("education", ed._id, {
+                            start: e.target.value,
+                          })
                         }
                       />
                       <input
@@ -999,19 +1091,22 @@ export default function ResumeBuilder() {
                         placeholder="End"
                         value={ed.end}
                         onChange={(e) =>
-                          updateItem("education", ed._id, { end: e.target.value })
+                          updateItem("education", ed._id, {
+                            end: e.target.value,
+                          })
                         }
                       />
                     </div>
 
-                    <textarea
-                      rows={2}
-                      className="mt-2 w-full px-2 py-1 border rounded"
-                      placeholder="Notes"
+                    <ReactQuill
+                      theme="snow"
                       value={ed.desc}
-                      onChange={(e) =>
-                        updateItem("education", ed._id, { desc: e.target.value })
+                      onChange={(v) =>
+                        updateItem("education", ed._id, { desc: v })
                       }
+                      modules={quillModules}
+                      formats={quillFormats}
+                      className="bg-white mt-2"
                     />
 
                     <button
@@ -1047,7 +1142,6 @@ export default function ResumeBuilder() {
               <div className="space-y-3 mt-3">
                 {resume.projects.map((p) => (
                   <div key={p._id} className="border p-3 rounded">
-
                     <input
                       className="mb-2 w-full px-2 py-1 border rounded"
                       placeholder="Project Title"
@@ -1066,14 +1160,15 @@ export default function ResumeBuilder() {
                       }
                     />
 
-                    <textarea
-                      rows={2}
-                      className="mt-2 w-full px-2 py-1 border rounded"
-                      placeholder="Description"
+                    <ReactQuill
+                      theme="snow"
                       value={p.desc}
-                      onChange={(e) =>
-                        updateItem("projects", p._id, { desc: e.target.value })
+                      onChange={(v) =>
+                        updateItem("projects", p._id, { desc: v })
                       }
+                      modules={quillModules}
+                      formats={quillFormats}
+                      className="bg-white mt-2"
                     />
 
                     <button
@@ -1100,6 +1195,7 @@ export default function ResumeBuilder() {
                       issuer: "",
                       date: "",
                       link: "",
+                      desc: "",
                     })
                   }
                 >
@@ -1110,13 +1206,14 @@ export default function ResumeBuilder() {
               <div className="space-y-3 mt-3">
                 {resume.certifications.map((c) => (
                   <div key={c._id} className="border p-3 rounded">
-
                     <input
                       className="mb-2 w-full px-2 py-1 border rounded"
                       placeholder="Certification Title"
                       value={c.title}
                       onChange={(e) =>
-                        updateItem("certifications", c._id, { title: e.target.value })
+                        updateItem("certifications", c._id, {
+                          title: e.target.value,
+                        })
                       }
                     />
 
@@ -1125,7 +1222,9 @@ export default function ResumeBuilder() {
                       placeholder="Issuer"
                       value={c.issuer}
                       onChange={(e) =>
-                        updateItem("certifications", c._id, { issuer: e.target.value })
+                        updateItem("certifications", c._id, {
+                          issuer: e.target.value,
+                        })
                       }
                     />
 
@@ -1135,7 +1234,9 @@ export default function ResumeBuilder() {
                         placeholder="Year"
                         value={c.date}
                         onChange={(e) =>
-                          updateItem("certifications", c._id, { date: e.target.value })
+                          updateItem("certifications", c._id, {
+                            date: e.target.value,
+                          })
                         }
                       />
 
@@ -1144,10 +1245,23 @@ export default function ResumeBuilder() {
                         placeholder="Certificate Link"
                         value={c.link}
                         onChange={(e) =>
-                          updateItem("certifications", c._id, { link: e.target.value })
+                          updateItem("certifications", c._id, {
+                            link: e.target.value,
+                          })
                         }
                       />
                     </div>
+
+                    <ReactQuill
+                      theme="snow"
+                      value={c.desc}
+                      onChange={(v) =>
+                        updateItem("certifications", c._id, { desc: v })
+                      }
+                      modules={quillModules}
+                      formats={quillFormats}
+                      className="bg-white mt-2"
+                    />
 
                     <button
                       className="mt-2 text-red-600 text-sm"
@@ -1168,20 +1282,17 @@ export default function ResumeBuilder() {
                 onChange={(s) => update("skills", s)}
               />
             </div>
-
           </div>
 
           {/* ================= RIGHT COLUMN — PREVIEW ================= */}
           <div className="lg:col-span-7">
-            <div className="bg-white border rounded-xl shadow p-5">
-              <ResumePreview
-                ref={previewRef}
-                data={resume}
-                accentColor="#3B82F6"
-              />
+            <div
+              ref={previewRef}
+              className="bg-white border rounded-xl shadow p-5"
+            >
+              <ResumePreview data={resume} accentColor="#3B82F6" />
             </div>
           </div>
-
         </div>
       </div>
     </div>
@@ -1233,4 +1344,3 @@ function SkillEditor({ skills, onChange }) {
     </div>
   );
 }
-
