@@ -7,17 +7,22 @@ import ResumeBuilder from "./pages/ResumeBuilder";
 import Preview from "./pages/Preview";
 import Login from "./pages/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
+import GoogleAuthHandler from "./pages/GoogleAuthHandler";  // <-- ADD THIS
 import "react-quill/dist/quill.snow.css";
-
 
 const App = () => {
   return (
     <Routes>
+      {/* PUBLIC ROUTES */}
       <Route path="/" element={<Home />} />
+      <Route path="/login" element={<Login />} />
+
+      {/* GOOGLE AUTH CALLBACK */}
+      <Route path="/auth/success" element={<GoogleAuthHandler />} />
 
       {/* PROTECTED ROUTES */}
       <Route
-        path="app"
+        path="/app"
         element={
           <ProtectedRoute>
             <Layout />
@@ -28,9 +33,8 @@ const App = () => {
         <Route path="builder/:resumeId" element={<ResumeBuilder />} />
       </Route>
 
-      <Route path="view/:resumeId" element={<Preview />} />
-
-      <Route path="login" element={<Login />} />
+      {/* PUBLIC RESUME VIEWER */}
+      <Route path="/view/:resumeId" element={<Preview />} />
     </Routes>
   );
 };

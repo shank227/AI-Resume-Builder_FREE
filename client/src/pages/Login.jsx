@@ -85,7 +85,6 @@ const Login = () => {
 
   return (
     <div className={`${styles.container} ${active ? styles.active : ""}`}>
-
       {/* -------------------------------------------------
            SIGN UP FORM
       --------------------------------------------------- */}
@@ -94,10 +93,22 @@ const Login = () => {
           <h1>Create Account</h1>
 
           <div className={styles.socialIcons}>
-            <a className={styles.icons}><FaGoogle /></a>
-            <a className={styles.icons}><FaFacebook /></a>
-            <a className={styles.icons}><FaGithub /></a>
-            <a className={styles.icons}><FaLinkedin /></a>
+            <a
+              className={styles.icons}
+              href="http://localhost:5000/api/auth/google"
+            >
+              <FaGoogle />
+            </a>
+
+            <a className={styles.icons}>
+              <FaFacebook />
+            </a>
+            <a className={styles.icons}>
+              <FaGithub />
+            </a>
+            <a className={styles.icons}>
+              <FaLinkedin />
+            </a>
           </div>
 
           <span>Register with email</span>
@@ -144,10 +155,22 @@ const Login = () => {
           <h1>Sign In</h1>
 
           <div className={styles.socialIcons}>
-            <a className={styles.icons}><FaGoogle /></a>
-            <a className={styles.icons}><FaFacebook /></a>
-            <a className={styles.icons}><FaGithub /></a>
-            <a className={styles.icons}><FaLinkedin /></a>
+            <a
+              className={styles.icons}
+              href="http://localhost:5000/api/auth/google"
+            >
+              <FaGoogle />
+            </a>
+
+            <a className={styles.icons}>
+              <FaFacebook />
+            </a>
+            <a className={styles.icons}>
+              <FaGithub />
+            </a>
+            <a className={styles.icons}>
+              <FaLinkedin />
+            </a>
           </div>
 
           <span>Login with Email & Password</span>
@@ -185,14 +208,10 @@ const Login = () => {
       --------------------------------------------------- */}
       <div className={styles.toggleContainer}>
         <div className={styles.toggle}>
-
           <div className={`${styles.togglePanel} ${styles.toggleLeft}`}>
             <h1>Welcome Back</h1>
             <p>Sign in with your email & password</p>
-            <button
-              className={styles.hidden}
-              onClick={() => setActive(false)}
-            >
+            <button className={styles.hidden} onClick={() => setActive(false)}>
               Sign In
             </button>
           </div>
@@ -200,14 +219,10 @@ const Login = () => {
           <div className={`${styles.togglePanel} ${styles.toggleRight}`}>
             <h1>Hello Friend</h1>
             <p>Register to start your journey</p>
-            <button
-              className={styles.hidden}
-              onClick={() => setActive(true)}
-            >
+            <button className={styles.hidden} onClick={() => setActive(true)}>
               Sign Up
             </button>
           </div>
-
         </div>
       </div>
     </div>

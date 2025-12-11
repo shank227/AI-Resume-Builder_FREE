@@ -1,30 +1,44 @@
 // src/utils/api.js
-const BASE_URL = "http://localhost:5000/api/users";
+
+// AUTH BASE URL
+const BASE_URL = "http://localhost:5000/api/auth";
 
 export const registerUserAPI = async (data) => {
-  const res = await fetch(`${BASE_URL}/register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
-  });
+  try {
+    const res = await fetch(`${BASE_URL}/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
 
-  return res.json();
+    return await res.json();
+  } catch (err) {
+    return { message: "Server error" };
+  }
 };
 
 export const loginUserAPI = async (data) => {
-  const res = await fetch(`${BASE_URL}/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
-  });
+  try {
+    const res = await fetch(`${BASE_URL}/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
 
-  return res.json();
+    return await res.json();
+  } catch (err) {
+    return { message: "Server error" };
+  }
 };
 
 export const getProfileAPI = async (token) => {
-  const res = await fetch(`${BASE_URL}/profile`, {
-    headers: { Authorization: `Bearer ${token}` }
-  });
+  try {
+    const res = await fetch(`${BASE_URL}/profile`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
 
-  return res.json();
+    return await res.json();
+  } catch (err) {
+    return { message: "Server error" };
+  }
 };

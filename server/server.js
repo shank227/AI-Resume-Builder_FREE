@@ -1,20 +1,30 @@
-import express from "express"
-import dotenv from "dotenv"
-import mongoose from "mongoose"
-import cors from "cors"
-import userRoutes from "./routes/userRoutes.js";
+import dotenv from "dotenv";
+dotenv.config();
 
-dotenv.config()
+import express from "express";
+import cors from "cors";
+import connectDB from "./config/db.js";
+import authRoutes from "./routes/auth.js";
+import resumeRoutes from "./routes/resume.js";
+import passport from "passport";
+import "./config/passport.js"; // initialize passport Google strategy
 
-const app = express()
-app.use(cors())
-app.use(express.json())
-app.use("/api/users", userRoutes);
+const app = express();
+connectDB();
 
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB connected"))
-  .catch(err => console.log(err))
+app.use(cors({
+  origin: process.env.CLIENT_URL,
+  credentials: true
+}));
+app.use(express.json({ limit: "2mb" }));
+app.use(express.urlencoded({ extended: true }));
+app.use(passport.initialize());
 
-app.listen(process.env.PORT, () => {
-  console.log("Server running on port " + process.env.PORT)
-})
+// Routes
+app.use("/api/auth", authRoutes);
+app.use("/api/resume", resumeRoutes);
+
+app.get("/", (req, res) => res.send("AI Resume Builder API"));
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
