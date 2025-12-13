@@ -1,142 +1,95 @@
 // src/utils/api.js
 
+const BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  "https://ai-resume-builder-backend-swhl.onrender.com";
+
 //------------------------------------
 // AUTH
 //------------------------------------
-const AUTH_URL = "http://localhost:5000/api/auth";
+const AUTH_URL = `${BASE_URL}/api/auth`;
 
 export const registerUserAPI = async (data) => {
-  try {
-    const res = await fetch(`${AUTH_URL}/register`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-    return await res.json();
-  } catch {
-    return { message: "Server error" };
-  }
+  const res = await fetch(`${AUTH_URL}/register`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  return res.json();
 };
 
 export const loginUserAPI = async (data) => {
-  try {
-    const res = await fetch(`${AUTH_URL}/login`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-    return await res.json();
-  } catch {
-    return { message: "Server error" };
-  }
+  const res = await fetch(`${AUTH_URL}/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
+  });
+  return res.json();
 };
 
 export const getProfileAPI = async (token) => {
-  try {
-    const res = await fetch(`${AUTH_URL}/profile`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return await res.json();
-  } catch {
-    return { message: "Server error" };
-  }
+  const res = await fetch(`${AUTH_URL}/profile`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.json();
 };
 
 //------------------------------------
 // RESUME API
 //------------------------------------
-const RESUME_URL = "http://localhost:5000/api/resume";
+const RESUME_URL = `${BASE_URL}/api/resume`;
 
-// CREATE resume
 export const createResumeAPI = async (token, resumeData) => {
-  try {
-    const res = await fetch(RESUME_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(resumeData),
-    });
-    return await res.json();
-  } catch {
-    return { message: "Error creating resume" };
-  }
+  const res = await fetch(RESUME_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(resumeData),
+  });
+  return res.json();
 };
 
-// UPDATE resume
 export const updateResumeAPI = async (token, id, resumeData) => {
-  try {
-    const res = await fetch(`${RESUME_URL}/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify(resumeData),
-    });
-    return await res.json();
-  } catch {
-    return { message: "Error updating resume" };
-  }
+  const res = await fetch(`${RESUME_URL}/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(resumeData),
+  });
+  return res.json();
 };
 
-// GET ALL resumes
 export const getAllResumesAPI = async (token) => {
-  try {
-    const res = await fetch(RESUME_URL, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return await res.json();
-  } catch {
-    return { message: "Error fetching resumes" };
-  }
+  const res = await fetch(RESUME_URL, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.json();
 };
 
-// GET single resume
 export const getResumeByIdAPI = async (token, id) => {
-  try {
-    const res = await fetch(`${RESUME_URL}/${id}`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return await res.json();
-  } catch {
-    return { message: "Error loading resume" };
-  }
+  const res = await fetch(`${RESUME_URL}/${id}`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.json();
 };
 
-// DELETE resume
 export const deleteResumeAPI = async (token, id) => {
-  try {
-    const res = await fetch(`${RESUME_URL}/${id}`, {
-      method: "DELETE",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return await res.json();
-  } catch {
-    return { message: "Error deleting resume" };
-  }
+  const res = await fetch(`${RESUME_URL}/${id}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  return res.json();
 };
 
-// UPDATE TITLE only
-export const updateResumeTitleAPI = async (token, id, title) => {
-  try {
-    const res = await fetch(`${RESUME_URL}/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ title }),
-    });
-    return await res.json();
-  } catch {
-    return { message: "Error updating title" };
-  }
-};
-
+//------------------------------------
+// AI
+//------------------------------------
 export const improveResumeAPI = async (token, section, text) => {
-  const res = await fetch("http://localhost:5000/api/ai/improve", {
+  const res = await fetch(`${BASE_URL}/api/ai/improve`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -144,6 +97,5 @@ export const improveResumeAPI = async (token, section, text) => {
     },
     body: JSON.stringify({ section, text }),
   });
-
   return res.json();
 };
