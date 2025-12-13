@@ -1,4 +1,8 @@
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+// src/utils/api.js
+
+// ✅ BASE URL with safe fallback
+const BASE_URL =
+  import.meta.env.VITE_API_BASE_URL || "http://localhost:5000";
 
 //------------------------------------
 // AUTH
@@ -13,7 +17,7 @@ export const registerUserAPI = async (data) => {
       body: JSON.stringify(data),
     });
     return await res.json();
-  } catch {
+  } catch (err) {
     return { message: "Server error" };
   }
 };
@@ -26,7 +30,7 @@ export const loginUserAPI = async (data) => {
       body: JSON.stringify(data),
     });
     return await res.json();
-  } catch {
+  } catch (err) {
     return { message: "Server error" };
   }
 };
@@ -39,7 +43,7 @@ export const getProfileAPI = async (token) => {
       },
     });
     return await res.json();
-  } catch {
+  } catch (err) {
     return { message: "Server error" };
   }
 };
