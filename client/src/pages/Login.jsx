@@ -93,12 +93,12 @@ const Login = () => {
           <h1>Create Account</h1>
 
           <div className={styles.socialIcons}>
-            <a
+            {/* <a
               className={styles.icons}
               href="http://localhost:5000/api/auth/google"
             >
               <FaGoogle />
-            </a>
+            </a> */}
           </div>
 
           <span>Register with email</span>
@@ -145,12 +145,12 @@ const Login = () => {
           <h1>Sign In</h1>
 
           <div className={styles.socialIcons}>
-            <a
+            {/* <a
               className={styles.icons}
               href="http://localhost:5000/api/auth/google"
             >
               <FaGoogle />
-            </a>
+            </a> */}
           </div>
           
 
