@@ -13,13 +13,30 @@ import aiRoutes from "./routes/ai.js";
 const app = express();
 connectDB();
 
+const allowedOrigins = [
+  "https://cvaichemyio.netlify.app",
+  "http://localhost:5173"
+];
+
 app.use(cors({
-  origin: [
-    process.env.CLIENT_URL,
-    "http://localhost:5173"
-  ],
-  credentials: true
+  origin: function (origin, callback) {
+    // allow non-browser tools like Postman
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
 }));
+
+// 🔴 THIS LINE IS CRITICAL
+app.options("*", cors());
+
 
 app.use(express.json({ limit: "2mb" }));
 app.use(express.urlencoded({ extended: true }));
