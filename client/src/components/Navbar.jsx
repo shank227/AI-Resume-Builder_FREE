@@ -2,7 +2,7 @@ import React from 'react'
 import {Link, useNavigate} from 'react-router-dom'
 
 const Navbar = () => {
-    const user = {name: 'John Doe'}
+    const user = {name: 'User'}
     const navigate = useNavigate()
 
     const LogoutUser = () => {

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styles from "./Form.module.css";
-import { FaGoogle, FaFacebook, FaGithub, FaLinkedin } from "react-icons/fa";
+import { FaGoogle} from "react-icons/fa";
 import { loginUserAPI, registerUserAPI } from "../utils/api";
 import { useNavigate } from "react-router-dom";
 
@@ -99,16 +99,6 @@ const Login = () => {
             >
               <FaGoogle />
             </a>
-
-            <a className={styles.icons}>
-              <FaFacebook />
-            </a>
-            <a className={styles.icons}>
-              <FaGithub />
-            </a>
-            <a className={styles.icons}>
-              <FaLinkedin />
-            </a>
           </div>
 
           <span>Register with email</span>
@@ -161,17 +151,8 @@ const Login = () => {
             >
               <FaGoogle />
             </a>
-
-            <a className={styles.icons}>
-              <FaFacebook />
-            </a>
-            <a className={styles.icons}>
-              <FaGithub />
-            </a>
-            <a className={styles.icons}>
-              <FaLinkedin />
-            </a>
           </div>
+          
 
           <span>Login with Email & Password</span>
 
@@ -195,8 +176,6 @@ const Login = () => {
             <p style={{ color: "red", fontSize: 12 }}>{errorMsg}</p>
           )}
 
-          <a href="#">Forgot Password?</a>
-
           <button type="submit" disabled={loading}>
             {loading ? "Signing in..." : "Sign In"}
           </button>
@@ -217,8 +196,8 @@ const Login = () => {
           </div>
 
           <div className={`${styles.togglePanel} ${styles.toggleRight}`}>
-            <h1>Hello Friend</h1>
-            <p>Register to start your journey</p>
+            <h1>Hello User</h1>
+            <p>Register to start building</p>
             <button className={styles.hidden} onClick={() => setActive(true)}>
               Sign Up
             </button>
