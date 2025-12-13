@@ -1,8 +1,4 @@
-// src/utils/api.js
-
-const BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ||
-  "https://ai-resume-builder-backend-swhl.onrender.com";
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 //------------------------------------
 // AUTH
@@ -10,32 +6,46 @@ const BASE_URL =
 const AUTH_URL = `${BASE_URL}/api/auth`;
 
 export const registerUserAPI = async (data) => {
-  const res = await fetch(`${AUTH_URL}/register`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
-  return res.json();
+  try {
+    const res = await fetch(`${AUTH_URL}/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    return await res.json();
+  } catch {
+    return { message: "Server error" };
+  }
 };
 
 export const loginUserAPI = async (data) => {
-  const res = await fetch(`${AUTH_URL}/login`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
-  return res.json();
+  try {
+    const res = await fetch(`${AUTH_URL}/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data),
+    });
+    return await res.json();
+  } catch {
+    return { message: "Server error" };
+  }
 };
 
 export const getProfileAPI = async (token) => {
-  const res = await fetch(`${AUTH_URL}/profile`, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
-  return res.json();
+  try {
+    const res = await fetch(`${AUTH_URL}/profile`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return await res.json();
+  } catch {
+    return { message: "Server error" };
+  }
 };
 
 //------------------------------------
-// RESUME API
+// RESUME
 //------------------------------------
 const RESUME_URL = `${BASE_URL}/api/resume`;
 
@@ -88,14 +98,15 @@ export const deleteResumeAPI = async (token, id) => {
 //------------------------------------
 // AI
 //------------------------------------
-export const improveResumeAPI = async (token, section, text) => {
+export const improveResumeAPI = async (token, payload) => {
   const res = await fetch(`${BASE_URL}/api/ai/improve`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: JSON.stringify({ section, text }),
+    body: JSON.stringify(payload),
   });
+
   return res.json();
 };
