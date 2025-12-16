@@ -4,6 +4,34 @@ import { FaGoogle} from "react-icons/fa";
 import { loginUserAPI, registerUserAPI } from "../utils/api";
 import { useNavigate } from "react-router-dom";
 
+// -------------------------------------------
+// VALIDATION HELPERS
+// -------------------------------------------
+const ALLOWED_EMAIL_DOMAINS = [
+  "gmail.com",
+  "outlook.com",
+  "yahoo.com",
+  "zoho.com",
+  "icloud.com",
+  "proton.me",
+  "protonmail.com",
+  "hotmail.com",
+  "rediff.com",
+  "zohomail.in"
+];
+
+const isValidName = (name) => {
+  // Only letters and spaces, minimum 2 chars
+  return /^[A-Za-z ]{2,}$/.test(name.trim());
+};
+
+const isAllowedEmail = (email) => {
+  if (!email.includes("@")) return false;
+  const domain = email.split("@")[1].toLowerCase();
+  return ALLOWED_EMAIL_DOMAINS.includes(domain);
+};
+
+
 const Login = () => {
   const [active, setActive] = useState(false); // toggle animation
 
@@ -51,37 +79,50 @@ const Login = () => {
   // SIGNUP HANDLER
   // -------------------------------------------
   const handleSignup = async (e) => {
-    e.preventDefault();
-    setErrorMsg("");
-    setLoading(true);
+  e.preventDefault();
+  setErrorMsg("");
+  setLoading(true);
 
-    if (!signupName || !signupEmail || !signupPassword) {
-      setErrorMsg("Please fill all fields.");
-      setLoading(false);
-      return;
-    }
-
-    if (signupPassword.length < 6) {
-      setErrorMsg("Password must be at least 6 characters.");
-      setLoading(false);
-      return;
-    }
-
-    const res = await registerUserAPI({
-      name: signupName,
-      email: signupEmail,
-      password: signupPassword,
-    });
-
-    if (res.user) {
-      // After signup → switch to login view
-      setActive(false);
-    } else {
-      setErrorMsg(res.message || "Signup failed");
-    }
-
+  if (!signupName || !signupEmail || !signupPassword) {
+    setErrorMsg("Please fill all fields.");
     setLoading(false);
-  };
+    return;
+  }
+
+  if (!isValidName(signupName)) {
+    setErrorMsg("Name should contain only letters (no numbers or symbols).");
+    setLoading(false);
+    return;
+  }
+
+  if (!isAllowedEmail(signupEmail)) {
+    setErrorMsg(
+      "Please use a valid email address"
+    );
+    setLoading(false);
+    return;
+  }
+
+  if (signupPassword.length < 6) {
+    setErrorMsg("Password must be at least 6 characters.");
+    setLoading(false);
+    return;
+  }
+
+  const res = await registerUserAPI({
+    name: signupName.trim(),
+    email: signupEmail.toLowerCase(),
+    password: signupPassword,
+  });
+
+  if (res.user) {
+    setActive(false); // switch to login
+  } else {
+    setErrorMsg(res.message || "Signup failed");
+  }
+
+  setLoading(false);
+};
 
   return (
     <div className={`${styles.container} ${active ? styles.active : ""}`}>

@@ -1,6 +1,11 @@
 // client/src/components/templates/HarvardTemplate.jsx
-
 import React from "react";
+
+const richTextStyle = {
+  wordBreak: "break-word",
+  overflowWrap: "anywhere",
+  whiteSpace: "normal",
+};
 
 export default function HarvardTemplate({ data, accentColor = "#111827" }) {
   const p = data.personal_info || {};
@@ -11,7 +16,7 @@ export default function HarvardTemplate({ data, accentColor = "#111827" }) {
         href={url}
         target="_blank"
         rel="noreferrer"
-        className="text-indigo-600 underline"
+        className="text-indigo-600 underline break-words"
       >
         {label}
       </a>
@@ -20,20 +25,24 @@ export default function HarvardTemplate({ data, accentColor = "#111827" }) {
   return (
     <div
       className="p-8 text-[13px] leading-relaxed"
-      style={{ fontFamily: "Georgia, serif", color: "#111" }}
+      style={{
+        fontFamily: "Georgia, serif",
+        color: "#111",
+        maxWidth: "794px", // A4 width safety
+      }}
     >
       {/* ================= HEADER ================= */}
       <div className="text-center mb-4">
-        <h1 className="text-3xl font-bold tracking-wide">
+        <h1 className="text-3xl font-bold tracking-wide break-words">
           {p.fullName || "Your Name"}
         </h1>
 
-        <div className="mt-1 text-[13px] text-gray-700">
+        <div className="mt-1 text-[13px] text-gray-700 break-words">
           {data.title || "Your Title"} • {p.location || ""}
         </div>
 
         <div className="flex flex-wrap justify-center gap-x-3 mt-2 text-gray-700">
-          {p.email && <span>{p.email}</span>}
+          {p.email && <span className="break-words">{p.email}</span>}
           {p.phone && <span>• {p.phone}</span>}
         </div>
 
@@ -59,6 +68,7 @@ export default function HarvardTemplate({ data, accentColor = "#111827" }) {
           </h2>
           <div
             className="text-[13px] text-gray-800"
+            style={richTextStyle}
             dangerouslySetInnerHTML={{ __html: data.summary }}
           />
         </section>
@@ -78,7 +88,7 @@ export default function HarvardTemplate({ data, accentColor = "#111827" }) {
             {data.skills.map((skill, idx) => (
               <span
                 key={idx}
-                className="px-2 py-1 bg-gray-100 rounded text-[12px]"
+                className="px-2 py-1 bg-gray-100 rounded text-[12px] break-words"
               >
                 {skill}
               </span>
@@ -98,19 +108,22 @@ export default function HarvardTemplate({ data, accentColor = "#111827" }) {
           </h2>
 
           {data.education.map((ed) => (
-            <div key={ed._id} className="mb-2">
-              <div className="flex justify-between">
-                <span className="font-semibold">{ed.school}</span>
-                <span className="text-gray-600 text-[12px]">
+            <div key={ed._id} className="mb-3">
+              <div className="flex justify-between gap-4">
+                <span className="font-semibold break-words">{ed.school}</span>
+                <span className="text-gray-600 text-[12px] whitespace-nowrap">
                   {ed.start} – {ed.end}
                 </span>
               </div>
 
-              <div className="italic text-gray-700">{ed.degree}</div>
+              <div className="italic text-gray-700 break-words">
+                {ed.degree}
+              </div>
 
               {ed.desc && (
                 <div
                   className="mt-1 text-gray-700 text-[13px]"
+                  style={richTextStyle}
                   dangerouslySetInnerHTML={{ __html: ed.desc }}
                 />
               )}
@@ -131,11 +144,11 @@ export default function HarvardTemplate({ data, accentColor = "#111827" }) {
 
           {data.experience.map((ex) => (
             <div key={ex._id} className="mb-3">
-              <div className="flex justify-between">
-                <span className="font-semibold">
+              <div className="flex justify-between gap-4">
+                <span className="font-semibold break-words">
                   {ex.title} — {ex.company}
                 </span>
-                <span className="text-gray-600 text-[12px]">
+                <span className="text-gray-600 text-[12px] whitespace-nowrap">
                   {ex.start} – {ex.end || "Present"}
                 </span>
               </div>
@@ -143,6 +156,7 @@ export default function HarvardTemplate({ data, accentColor = "#111827" }) {
               {ex.desc && (
                 <div
                   className="mt-1 text-[13px]"
+                  style={richTextStyle}
                   dangerouslySetInnerHTML={{ __html: ex.desc }}
                 />
               )}
@@ -168,17 +182,18 @@ export default function HarvardTemplate({ data, accentColor = "#111827" }) {
                   href={p.link}
                   target="_blank"
                   rel="noreferrer"
-                  className="font-semibold text-indigo-600 underline"
+                  className="font-semibold text-indigo-600 underline break-words"
                 >
                   {p.title}
                 </a>
               ) : (
-                <span className="font-semibold">{p.title}</span>
+                <span className="font-semibold break-words">{p.title}</span>
               )}
 
               {p.desc && (
                 <div
                   className="mt-1 text-[13px]"
+                  style={richTextStyle}
                   dangerouslySetInnerHTML={{ __html: p.desc }}
                 />
               )}
@@ -204,21 +219,22 @@ export default function HarvardTemplate({ data, accentColor = "#111827" }) {
                   href={c.link}
                   target="_blank"
                   rel="noreferrer"
-                  className="font-semibold text-indigo-600 underline"
+                  className="font-semibold text-indigo-600 underline break-words"
                 >
                   {c.title}
                 </a>
               ) : (
-                <span className="font-semibold">{c.title}</span>
+                <span className="font-semibold break-words">{c.title}</span>
               )}
 
-              <div className="text-gray-600 text-[12px]">
+              <div className="text-gray-600 text-[12px] break-words">
                 {c.issuer} • {c.date}
               </div>
 
               {c.desc && (
                 <div
                   className="mt-1 text-[13px]"
+                  style={richTextStyle}
                   dangerouslySetInnerHTML={{ __html: c.desc }}
                 />
               )}
