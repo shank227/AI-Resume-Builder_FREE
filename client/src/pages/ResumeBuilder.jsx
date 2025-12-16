@@ -21,21 +21,45 @@ const uid = () => Math.random().toString(36).slice(2, 9);
 /* --------------------------------------------
    AI CALL (SIMPLE GEMINI)
 -------------------------------------------- */
+// async function simpleAI(prompt) {
+//   try {
+//     const res = await fetch("http://localhost:5000/api/ai/generate", {
+//       method: "POST",
+//       headers: { "Content-Type": "application/json" },
+//       body: JSON.stringify({ prompt }),
+//     });
+
+//     const json = await res.json();
+//     if (json.success) return json.suggestion;
+//     return null;
+//   } catch (err) {
+//     return null;
+//   }
+// }
+
+const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 async function simpleAI(prompt) {
   try {
-    const res = await fetch("http://localhost:5000/api/ai/generate", {
+    const res = await fetch(`${BASE_URL}/api/ai/generate`, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
+      },
       body: JSON.stringify({ prompt }),
     });
 
     const json = await res.json();
-    if (json.success) return json.suggestion;
-    return null;
+    return json.success ? json.suggestion : null;
   } catch (err) {
+    console.error("AI error:", err);
     return null;
   }
 }
+
+
+
 
 /* ---------- Resume Preview Wrapper ---------- */
 const ResumePreview = ({ data, accentColor }) => {
