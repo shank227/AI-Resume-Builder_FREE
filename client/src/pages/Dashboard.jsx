@@ -173,7 +173,7 @@ const Dashboard = () => {
 
               <input
                 className="w-full px-4 py-2 border rounded mb-4"
-                placeholder="Resume title"
+                placeholder="Profession/Resume Title"
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 required
