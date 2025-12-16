@@ -58,9 +58,6 @@ async function simpleAI(prompt) {
   }
 }
 
-
-
-
 /* ---------- Resume Preview Wrapper ---------- */
 const ResumePreview = ({ data, accentColor }) => {
   return (
